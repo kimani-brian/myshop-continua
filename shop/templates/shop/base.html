@@ -6,7 +6,6 @@
     <title>{% block title %}My shop{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -59,20 +58,17 @@
                 <!-- User Account -->
                 <div class="flex items-center space-x-4">
                     {% if user.is_authenticated %}
-                        <!-- Show username -->
                         <span class="font-medium">Hi, {{ user.username }}</span>
-
-                        <!-- Logout Button (POST) -->
-                        <form method="post" action="{% url 'accounts:logout' %}">
+                        <!-- ✅ Logout Form (POST with CSRF) -->
+                        <form action="{% url 'accounts:logout' %}" method="post" class="inline">
                             {% csrf_token %}
-                            <button type="submit" 
-                                    class="flex items-center space-x-2 hover:text-blue-200 transition">
+                            <button type="submit" class="flex items-center space-x-2 hover:text-blue-200 transition">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Logout</span>
                             </button>
                         </form>
+
                     {% else %}
-                        <!-- Show Login / Signup -->
                         <a href="{% url 'accounts:login' %}" class="flex items-center space-x-2 hover:text-blue-200">
                             <i class="fas fa-sign-in-alt"></i>
                             <span>Login</span>
@@ -145,7 +141,5 @@
 
     <!-- Font Awesome CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
-
 </body>
 </html>

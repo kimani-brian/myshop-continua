@@ -25,12 +25,12 @@ from accounts import views as accounts_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("accounts/", include("accounts.urls")),  
-    path('cart/', include('cart.urls', namespace='cart')),
-    path('orders/', include('orders.urls', namespace='orders')),
-    path('mpesa/', include('mpesa.urls', namespace='mpesa')),
-    path('coupons/', include('coupons.urls', namespace='coupons')),
-    path('', include('shop.urls', namespace='shop')),  # correct
+    path("accounts/", include(("accounts.urls"), namespace="accounts")),
+    path('cart/', include(('cart.urls', 'cart'), namespace='cart')),
+    path('orders/', include(('orders.urls', 'orders'), namespace='orders')),
+    path('mpesa/', include(('mpesa.urls', 'mpesa'), namespace='mpesa')),
+    path('coupons/', include(('coupons.urls', 'coupons'), namespace='coupons')),
+    path('', include(('shop.urls', 'shop'), namespace='shop')),
 
     #auth routes
     
