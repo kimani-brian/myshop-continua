@@ -44,7 +44,7 @@ def order_create(request):
                 del request.session['coupon_id']
 
             # Optionally send email/task
-            order_created(order.id)
+            order_created(order.id)  # ✅ Replaced .delay() with direct call
             # order_created.delay(order.id)
 
             # Handle M-Pesa redirect
