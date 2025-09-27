@@ -6,14 +6,10 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG',cast=bool)
 SECRET_KEY = config('SECRET_KEY')
 
-ALLOWED_HOSTS = config(
-    'ALLOWED_HOSTS',
-    default='localhost,127.0.0.1',
-    cast=lambda v: [h.strip() for h in v.split(',')]
-)
+ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
 
 # Applications
 INSTALLED_APPS = [
@@ -84,7 +80,7 @@ DATABASES = {
     }
 }
 
-DATABASES["default"]=dj_database_url.parse("postgresql://instamart_983f_user:q4cpYM7szBIwIftfrPQyN2DGPpQWdmFd@dpg-d3bp1uvdiees738rfsog-a.oregon-postgres.render.com/instamart_983f")
+DATABASES["default"]=dj_database_url.parse(config('DATABASE_URL'))
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
