@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
-import dj_database_url
 from decouple import config
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -75,32 +75,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myshop.wsgi.application'
 
-DB_LIVE = config('DB_LIVE',)
 
-if DB_LIVE in ["False", False]:
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE':'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
 
-else:
-
-
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': config('DB_NAME'),
-                'USER': config('DB_USER'),
-                'PASSWORD': config('DB_PASSWORD'),
-                'HOST': config('DB_HOST'),
-                'PORT': config('DB_PORT'),
-            }
-        }
-
- 
+DATABASES["default"]=dj_database_url.parse("postgresql://instamart_983f_user:q4cpYM7szBIwIftfrPQyN2DGPpQWdmFd@dpg-d3bp1uvdiees738rfsog-a.oregon-postgres.render.com/instamart_983f")
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
