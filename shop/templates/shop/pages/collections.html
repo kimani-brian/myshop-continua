@@ -1,0 +1,51 @@
+{% extends "shop/base.html" %}
+{% block title %}Collections · InstaMart{% endblock %}
+
+{% block content %}
+<section class="page-section space-y-4">
+  <p class="section-header__eyebrow">Curated shelves</p>
+  <h1 class="text-4xl font-semibold">Browse by collection</h1>
+  <p class="text-gray-600 text-lg">Each collection pairs a mood board, palette, and maker roster. Explore by vibe to build cohesive rooms or gifting bundles.</p>
+</section>
+
+<section class="page-section space-y-6">
+  <div class="section-header">
+    <div>
+      <p class="section-header__eyebrow">Highlights</p>
+      <h2>All categories</h2>
+    </div>
+  </div>
+  {% if categories %}
+  <div class="category-grid">
+    {% for category in categories %}
+    <article class="category-card" data-ripple>
+      <div>
+        <p class="category-card__name">{{ category.name }}</p>
+        <p class="category-card__meta">{{ category.product_total }} styles</p>
+      </div>
+      <a href="{{ category.get_absolute_url }}" aria-label="View {{ category.name }} collection">
+        <i class="fas fa-arrow-up-right-from-square"></i>
+      </a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-gray-500">No categories yet—check back soon.</p>
+  {% endif %}
+</section>
+
+<section class="page-section story-panel">
+  <div>
+    <p class="section-header__eyebrow">Curation playlist</p>
+    <h2>Themes rotate every six weeks</h2>
+    <p class="text-gray-600">We theme drops by emotion: grounding, playful, nocturnal, coastal. Subscribe to the newsletter to know which palette hits next.</p>
+    <div class="hero__actions" style="margin-top: 1rem;">
+      <a href="{% url 'shop:product_list' %}" class="btn btn--primary">Shop all products</a>
+      <a href="{% url 'shop:new_arrivals' %}" class="pill-link">See fresh arrivals</a>
+    </div>
+  </div>
+  <div class="story-panel__media" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80" alt="Styled collection" loading="lazy" decoding="async" width="900" height="600">
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "shop/base.html" %}
+{% block title %}About · InstaMart{% endblock %}
+
+{% block content %}
+<section class="page-section space-y-6">
+  <p class="section-header__eyebrow">Our story</p>
+  <h1 class="text-4xl font-semibold">Grounded design for slow living</h1>
+  <p class="text-gray-600 text-lg">InstaMart is a Nairobi-born marketplace that curates small-batch objects, textiles, and tableware made by designers across Kenya and the region. Every capsule drop is edited by our studio team so you can build a home that feels intentional.</p>
+  <div class="story-panel" style="margin-top: 1rem;">
+    <div>
+      <h2 class="text-2xl font-semibold">What guides us</h2>
+      <ul class="stacked-list text-gray-700" style="gap: 0.75rem;">
+        <li><strong>Craft first:</strong> We visit each maker, learning their process before adding them to the roster.</li>
+        <li><strong>Low impact:</strong> Packaging is plastic-free, inks are soy-based, and every shipment is offset through local agroforestry partners.</li>
+        <li><strong>Radical transparency:</strong> Product pages include material provenance, care notes, and maker profiles.</li>
+      </ul>
+    </div>
+    <div class="story-panel__media" aria-hidden="true">
+      <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=900&q=80" alt="Studio table with ceramics" loading="lazy" decoding="async" width="900" height="600">
+    </div>
+  </div>
+</section>
+
+<section class="page-section space-y-6">
+  <div class="section-header">
+    <div>
+      <p class="section-header__eyebrow">Milestones</p>
+      <h2>From pop-up to platform</h2>
+    </div>
+  </div>
+  <div class="support-grid">
+    <article class="support-card">
+      <p class="text-sm uppercase tracking-[0.2em] text-gray-500">2019</p>
+      <h3>Launch in Nairobi</h3>
+      <p>Started as a Saturday market residency inside a glasshouse studio featuring five independent makers.</p>
+    </article>
+    <article class="support-card">
+      <p class="text-sm uppercase tracking-[0.2em] text-gray-500">2022</p>
+      <h3>Regional fulfillment</h3>
+      <p>Partnered with rider fleets and warehouse collectives to guarantee 48-hour dispatch across Kenya.</p>
+    </article>
+    <article class="support-card">
+      <p class="text-sm uppercase tracking-[0.2em] text-gray-500">2025</p>
+      <h3>Resident maker program</h3>
+      <p>Launched quarterly residencies pairing ceramicists, textile artists, and perfumers for limited collaborative runs.</p>
+    </article>
+  </div>
+</section>
+{% endblock %}

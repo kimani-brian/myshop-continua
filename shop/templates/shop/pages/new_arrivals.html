@@ -1,0 +1,43 @@
+{% extends "shop/base.html" %}
+{% block title %}New Arrivals · InstaMart{% endblock %}
+
+{% block content %}
+<section class="page-section space-y-4">
+  <p class="section-header__eyebrow">Week 13 Drop</p>
+  <h1 class="text-4xl font-semibold">Fresh finds added this week</h1>
+  <p class="text-gray-600 text-lg">We release limited runs every Friday at noon EAT. Once a piece sells out it usually does not return, so add your favorites to the cart before the batch is gone.</p>
+</section>
+
+<section class="page-section space-y-6">
+  <div class="section-header">
+    <div>
+      <p class="section-header__eyebrow">Inventory radar</p>
+      <h2>12 newest pieces</h2>
+    </div>
+  </div>
+  {% if products %}
+  <div class="card-grid">
+    {% for product in products %}
+      {% include "components/product_card.html" with product=product badge="New" loading="lazy" sizes="(min-width: 1280px) 260px, (min-width: 768px) 45vw, 100vw" %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-gray-500">No new arrivals yet. Check back after the next drop.</p>
+  {% endif %}
+</section>
+
+<section class="page-section story-panel">
+  <div>
+    <p class="section-header__eyebrow">Drop cadence</p>
+    <h2>New capsules every Friday</h2>
+    <p class="text-gray-600">We spotlight one maker collective per drop so the story feels intentional. Expect ceramics, textiles, pantry goods, and wearable accents in rotating themes.</p>
+    <div class="hero__actions" style="margin-top: 1rem;">
+      <a href="{% url 'shop:product_search' %}?q=preorder" class="btn btn--primary">View preorder list</a>
+      <a href="{% url 'shop:product_list' %}" class="pill-link">Browse full catalog</a>
+    </div>
+  </div>
+  <div class="story-panel__media" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=900&q=80" alt="Shelves with new products" loading="lazy" decoding="async" width="900" height="600">
+  </div>
+</section>
+{% endblock %}

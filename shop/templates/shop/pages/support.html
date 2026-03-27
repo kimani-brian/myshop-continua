@@ -1,0 +1,48 @@
+{% extends "shop/base.html" %}
+{% block title %}Support Hub · InstaMart{% endblock %}
+
+{% block content %}
+<section class="page-section space-y-4">
+  <p class="section-header__eyebrow">Need a hand?</p>
+  <h1 class="text-4xl font-semibold">Support, FAQs, and concierge</h1>
+  <p class="text-gray-600 text-lg">We keep human support on standby six days a week. Pick the path that matches your request and we will guide you from there.</p>
+</section>
+
+<section class="page-section space-y-6">
+  <div class="support-grid">
+    <article class="support-card">
+      <h3>Contact the team</h3>
+      <p>Chat, call, or visit the studio for in-person styling sessions.</p>
+      <a class="pill-link" style="margin-top: 0.75rem; display: inline-flex;" href="{% url 'shop:support_contact' %}">Open contact page</a>
+    </article>
+    <article class="support-card">
+      <h3>Shipping &amp; returns</h3>
+      <p>Policies covering dispatch windows, line haul coverage, and refunds.</p>
+      <a class="pill-link" style="margin-top: 0.75rem; display: inline-flex;" href="{% url 'shop:shipping_returns' %}">View policies</a>
+    </article>
+    <article class="support-card">
+      <h3>FAQ snippets</h3>
+      <ul class="stacked-list text-sm" style="gap: 0.4rem;">
+        <li>How do I track my order? You get SMS + email when the parcel leaves.</li>
+        <li>Can I schedule delivery? Yes—reply to the courier SMS with a time.</li>
+        <li>Do you offer styling help? Book a free 20-minute virtual consult.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="page-section story-panel">
+  <div>
+    <p class="section-header__eyebrow">Talk to us</p>
+    <h2>WhatsApp concierge is fastest</h2>
+    <p class="text-gray-600">Tap below to open a support thread with our rider desk. Share your order number and we will reply within minutes during business hours.</p>
+    <div class="hero__actions" style="margin-top: 1rem;">
+      <a href="https://wa.me/254700222444" class="btn btn--primary" target="_blank" rel="noopener">Message on WhatsApp</a>
+      <a href="mailto:care@instamart.africa" class="pill-link">Email care@instamart.africa</a>
+    </div>
+  </div>
+  <div class="story-panel__media" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=900&q=80" alt="Customer success team" loading="lazy" decoding="async" width="900" height="600">
+  </div>
+</section>
+{% endblock %}

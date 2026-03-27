@@ -31,9 +31,9 @@
 
                 <nav class="primary-nav" aria-label="Primary">
                     <a href="{% url 'shop:product_list' %}">Shop</a>
-                    <a href="{% url 'shop:product_search' %}?q=new">New Arrivals</a>
-                    <a href="#">Collections</a>
-                    <a href="#">Support</a>
+                    <a href="{% url 'shop:new_arrivals' %}">New Arrivals</a>
+                    <a href="{% url 'shop:collections' %}">Collections</a>
+                    <a href="{% url 'shop:support_overview' %}">Support</a>
                 </nav>
 
                 <form action="{% url 'shop:product_search' %}" method="get" class="search-bar" role="search">
@@ -88,9 +88,9 @@
                 </div>
                 <nav class="mobile-drawer__nav" aria-label="Mobile primary">
                     <a href="{% url 'shop:product_list' %}">Shop</a>
-                    <a href="{% url 'shop:product_search' %}?q=new">New Arrivals</a>
-                    <a href="#">Collections</a>
-                    <a href="#">Support</a>
+                    <a href="{% url 'shop:new_arrivals' %}">New Arrivals</a>
+                    <a href="{% url 'shop:collections' %}">Collections</a>
+                    <a href="{% url 'shop:support_overview' %}">Support</a>
                 </nav>
                 <div class="mobile-drawer__meta">
                     {% with total_items=cart|length %}
@@ -142,23 +142,23 @@
                     <p>Curated goods and elevated experiences for every day.</p>
                     <p style="margin-top: 0.75rem;">
                         Riverside Lane · Nairobi<br />
-                        Open Mon–Sat · 9am–7pm EAT
+                        Open Mon-Sat · 9am-7pm EAT
                     </p>
                     <p style="margin-top: 0.5rem;">
                         <a href="mailto:hello@instamart.africa">hello@instamart.africa</a><br />
-                        <a href="tel:+254700555555">+254 700 555 555</a>
+                        <a href="tel:+254700555555">+254 700 555 555</a>
                     </p>
                 </div>
                 <div>
                     <p class="footer__heading">Company</p>
-                    <a href="{% url 'shop:product_list' %}#our-story">About</a><br />
-                    <a href="mailto:talent@instamart.africa?subject=Careers%20at%20InstaMart">Careers</a><br />
-                    <a href="mailto:press@instamart.africa?subject=Press%20kit%20request">Press</a>
+                    <a href="{% url 'shop:about' %}">About</a><br />
+                    <a href="{% url 'shop:careers' %}">Careers</a><br />
+                    <a href="{% url 'shop:press' %}">Press</a>
                 </div>
                 <div>
                     <p class="footer__heading">Support</p>
-                    <a href="mailto:care@instamart.africa?subject=Support%20request">Contact</a><br />
-                    <a href="{% url 'shop:product_list' %}#policies">Shipping &amp; Returns</a><br />
+                    <a href="{% url 'shop:support_contact' %}">Contact</a><br />
+                    <a href="{% url 'shop:shipping_returns' %}">Shipping &amp; Returns</a><br />
                     <a href="https://wa.me/254700222444" rel="noopener" target="_blank">WhatsApp concierge</a>
                 </div>
                 <div>

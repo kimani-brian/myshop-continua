@@ -1035,6 +1035,30 @@ a {
 	line-height: 1.6;
 }
 
+.support-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 1.25rem;
+}
+
+.support-card {
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	background: var(--color-surface);
+	padding: 1.5rem;
+	box-shadow: var(--shadow-soft);
+}
+
+.support-card h3 {
+	margin-top: 0;
+	margin-bottom: 0.75rem;
+	font-size: 1.05rem;
+}
+
+.support-card a {
+	color: var(--color-primary);
+}
+
 .newsletter {
 	border-radius: var(--radius-lg);
 	padding: clamp(1.75rem, 3vw, 2.75rem);

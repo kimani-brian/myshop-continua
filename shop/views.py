@@ -152,6 +152,48 @@ def product_search(request):
                    'results': results})
 
 
+def new_arrivals_view(request):
+    products = Product.objects.filter(available=True).order_by('-created')[:12]
+    return render(request, 'shop/pages/new_arrivals.html', {
+        'products': products,
+    })
+
+
+def collections_overview(request):
+    categories = (
+        Category.objects
+        .annotate(product_total=Count('products'))
+        .order_by('-product_total', 'name')
+    )
+    return render(request, 'shop/pages/collections.html', {
+        'categories': categories,
+    })
+
+
+def company_about(request):
+    return render(request, 'shop/pages/about.html')
+
+
+def company_careers(request):
+    return render(request, 'shop/pages/careers.html')
+
+
+def company_press(request):
+    return render(request, 'shop/pages/press.html')
+
+
+def support_contact(request):
+    return render(request, 'shop/pages/contact.html')
+
+
+def support_shipping_returns(request):
+    return render(request, 'shop/pages/shipping_returns.html')
+
+
+def support_overview(request):
+    return render(request, 'shop/pages/support.html')
+
+
 @csrf_exempt
 @require_POST
 def telemetry_event(request):
