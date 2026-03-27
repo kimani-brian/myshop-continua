@@ -8,77 +8,97 @@
 {% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-6">Shopping Cart</h1>
+<div class="space-y-8">
+    <section class="page-section space-y-6">
+        <header>
+            <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Bag</p>
+            <h1 class="text-3xl font-semibold">Shopping cart</h1>
+            <p class="text-sm text-gray-500 mt-2">
+                {% if cart|length %}
+                    {{ cart|length }} curated item{{ cart|length|pluralize }} ready for checkout.
+                {% else %}
+                    Your bag is waiting to be filled with something beautiful.
+                {% endif %}
+            </p>
+        </header>
 
-    <div class="overflow-x-auto bg-white shadow rounded-lg">
-        <table class="min-w-full text-sm text-left">
-            <thead class="bg-gray-100 text-gray-700">
+        <div class="table-shell">
+            <table class="table text-sm">
+                <thead>
                 <tr>
-                    <th class="px-4 py-3">Image</th>
-                    <th class="px-4 py-3">Product</th>
-                    <th class="px-4 py-3">Quantity</th>
-                    <th class="px-4 py-3">Remove</th>
-                    <th class="px-4 py-3">Unit Price</th>
-                    <th class="px-4 py-3">Price</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Unit price</th>
+                        <th>Total</th>
+                        <th>Actions</th>
                 </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
+                </thead>
+                <tbody>
                 {% for item in cart %}
                     {% with product=item.product %}
                     <tr>
-                        <td class="px-4 py-3">
-                            <a href="{{ product.get_absolute_url }}">
-                                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" 
-                                     alt="{{ product.name }}" class="w-20 h-20 object-cover rounded">
-                            </a>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <a href="{{ product.get_absolute_url }}" class="w-20 h-20 rounded-xl overflow-hidden bg-slate-100">
+                                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
+                                         alt="{{ product.name }}" class="w-full h-full object-cover">
+                                </a>
+                                <div>
+                                    <a href="{{ product.get_absolute_url }}" class="font-semibold">{{ product.name }}</a>
+                                    <p class="text-sm text-gray-500">SKU {{ product.id }}</p>
+                                </div>
+                            </div>
                         </td>
-                        <td class="px-4 py-3 font-medium">{{ product.name }}</td>
-                        <td class="px-4 py-3">
-                            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="flex items-center space-x-2">
-                                {{ item.update_quantity_form.quantity }}
+                        <td>
+                            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="table__qty-form">
+                                {{ item.update_quantity_form.quantity|add_class:"pill-input" }}
                                 {{ item.update_quantity_form.override }}
-                                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">Update</button>
                                 {% csrf_token %}
+                                <button type="submit" class="btn btn--ghost">Update</button>
                             </form>
                         </td>
-                        <td class="px-4 py-3">
-                            <form action="{% url 'cart:cart_remove' product.id %}" method="post">
-                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Remove</button>
+                        <td>Ksh.{{ item.price }}</td>
+                        <td class="font-semibold">Ksh.{{ item.total_price }}</td>
+                        <td>
+                            <form action="{% url 'cart:cart_remove' product.id %}" method="post" class="table__remove-form">
                                 {% csrf_token %}
+                                <button type="submit" class="btn" style="background: rgba(239,68,68,0.12); color: #b91c1c;">Remove</button>
                             </form>
                         </td>
-                        <td class="px-4 py-3">Ksh.{{ item.price }}</td>
-                        <td class="px-4 py-3 font-semibold">Ksh.{{ item.total_price }}</td>
                     </tr>
                     {% endwith %}
                 {% empty %}
                     <tr>
-                        <td colspan="6" class="px-4 py-6 text-center text-gray-500">Your cart is empty.</td>
+                        <td colspan="5" class="py-6 text-center text-gray-500">
+                            Your cart is empty.
+                            <a href="{% url 'shop:product_list' %}" class="text-blue-600 hover:underline ml-1">Browse the collection</a>
+                            to find your next favorite piece.
+                        </td>
                     </tr>
                 {% endfor %}
 
                 {% if cart.coupon %}
-                    <tr class="bg-gray-50">
-                        <td class="px-4 py-3 font-bold">Subtotal</td>
-                        <td colspan="4"></td>
-                        <td class="px-4 py-3">Ksh.{{ cart.get_total_price|floatformat:2 }}</td>
+                    <tr>
+                        <td class="font-bold">Subtotal</td>
+                        <td colspan="3"></td>
+                        <td>Ksh.{{ cart.get_total_price|floatformat:2 }}</td>
                     </tr>
-                    <tr class="bg-green-50">
-                        <td class="px-4 py-3 font-bold">"{{ cart.coupon.code }}" coupon</td>
-                        <td colspan="4" class="px-4 py-3">({{ cart.coupon.discount }}% off)</td>
-                        <td class="px-4 py-3 text-red-500">- Ksh.{{ cart.get_discount|floatformat:2 }}</td>
+                    <tr>
+                        <td class="font-bold">"{{ cart.coupon.code }}" coupon</td>
+                        <td colspan="3">({{ cart.coupon.discount }}% off)</td>
+                        <td class="text-red-500">- Ksh.{{ cart.get_discount|floatformat:2 }}</td>
                     </tr>
                 {% endif %}
 
-                <tr class="bg-gray-100 font-bold">
-                    <td class="px-4 py-3">Total</td>
-                    <td colspan="4"></td>
-                    <td class="px-4 py-3">Ksh.{{ cart.get_total_price_after_discount|floatformat:2 }}</td>
+                <tr>
+                    <td class="font-bold text-lg">Total</td>
+                    <td colspan="3"></td>
+                    <td class="font-bold text-lg">Ksh.{{ cart.get_total_price_after_discount|floatformat:2 }}</td>
                 </tr>
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
+    </section>
 
     {% if recommended_products %}
         <div class="mt-8">
@@ -99,21 +119,20 @@
         </div>
     {% endif %}
 
-    <div class="mt-6">
-        <p class="mb-2 font-medium">Apply a coupon:</p>
-        <form action="{% url 'coupons:apply' %}" method="post" class="flex items-center space-x-2">
-            {{ coupon_apply_form.code|add_class:"border border-gray-300 rounded px-3 py-2 bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
-            
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-                Apply
-            </button>
+    <section class="page-section space-y-4">
+        <p class="font-medium">Apply a coupon</p>
+        <form action="{% url 'coupons:apply' %}" method="post" class="cta-row">
+            <div class="flex-1">
+                {{ coupon_apply_form.code|add_class:"w-full border border-gray-300 rounded px-3 py-2 bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+            </div>
             {% csrf_token %}
+            <button type="submit" class="btn btn--ghost">Apply</button>
         </form>
-    </div>
-
-    <div class="mt-6 flex justify-between">
-        <a href="{% url 'shop:product_list' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">← Continue Shopping</a>
-        <a href="{% url 'orders:order_create' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Checkout →</a>
-    </div>
+        <p class="text-xs text-gray-500">Codes are case-sensitive and can be used once per order.</p>
+        <div class="cta-row">
+            <a href="{% url 'shop:product_list' %}" class="btn btn--ghost">Continue shopping</a>
+            <a href="{% url 'orders:order_create' %}" class="btn btn--primary">Checkout</a>
+        </div>
+    </section>
 </div>
 {% endblock %}

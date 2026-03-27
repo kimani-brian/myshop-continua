@@ -4,64 +4,51 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-  <h2 class="text-2xl font-bold mb-6">Create Account</h2>
-
-  <form method="post">
-    {% csrf_token %}
-    <div class="space-y-4">
-      {{ form.non_field_errors }}
-
-      <!-- Username -->
-      <div>
-        <label for="id_username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-        {{ form.username|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50" }}
-        {% if form.username.errors %}
-          <p class="text-red-500 text-sm mt-1">{{ form.username.errors.0 }}</p>
+<section class="page-section">
+  <div class="auth-shell">
+    <div class="auth-card">
+      <h2 class="text-2xl font-semibold mb-3">Create your account</h2>
+      <p class="text-sm text-gray-500 mb-6">Get access to faster checkout, order history, and personalized recommendations.</p>
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <p class="form-field__error">{{ form.non_field_errors|join:", " }}</p>
         {% endif %}
-      </div>
-
-      <!-- Email -->
-      <div>
-        <label for="id_email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-        {{ form.email|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50" }}
-        {% if form.email.errors %}
-          <p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <!-- Password -->
-      <div>
-        <label for="id_password1" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-        {{ form.password1|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50" }}
-        {% if form.password1.errors %}
-          <p class="text-red-500 text-sm mt-1">{{ form.password1.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <!-- Confirm Password -->
-      <div>
-        <label for="id_password2" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-        {{ form.password2|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50" }}
-        {% if form.password2.errors %}
-          <p class="text-red-500 text-sm mt-1">{{ form.password2.errors.0 }}</p>
-        {% endif %}
-      </div>
+        <div class="form-field">
+          <label for="id_username" class="form-field__label">Username</label>
+          {{ form.username|add_class:"form-field__input" }}
+          <p class="form-field__help">3–30 characters, letters and numbers only.</p>
+          {% if form.username.errors %}<p class="form-field__error">{{ form.username.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-field">
+          <label for="id_email" class="form-field__label">Email</label>
+          {{ form.email|add_class:"form-field__input" }}
+          <p class="form-field__help">We&rsquo;ll send order updates to this address.</p>
+          {% if form.email.errors %}<p class="form-field__error">{{ form.email.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-field">
+          <label for="id_password1" class="form-field__label">Password</label>
+          {{ form.password1|add_class:"form-field__input" }}
+          <p class="form-field__help">Min 8 characters with a mix of letters, numbers, or symbols.</p>
+          {% if form.password1.errors %}<p class="form-field__error">{{ form.password1.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-field">
+          <label for="id_password2" class="form-field__label">Confirm password</label>
+          {{ form.password2|add_class:"form-field__input" }}
+          <p class="form-field__help">Repeat your password so we can double-check it.</p>
+          {% if form.password2.errors %}<p class="form-field__error">{{ form.password2.errors.0 }}</p>{% endif %}
+        </div>
+        <button type="submit" class="btn btn--primary w-full mt-4">Sign up</button>
+      </form>
+      <p class="mt-4 text-sm text-center">
+        Already have an account?
+        <a href="{% url 'accounts:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="text-blue-600 hover:underline">Login</a>
+      </p>
     </div>
-
-    <!-- Submit -->
-    <button type="submit" class="w-full bg-blue-600 text-white py-2 mt-6 rounded-lg hover:bg-blue-700 transition">
-      Sign Up
-    </button>
-  </form>
-  <!-- Switch to login -->
-    <p class="mt-4 text-sm text-center">
-      Already have an account?
-      <a href="{% url 'accounts:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" 
-        class="text-blue-600 hover:underline">
-        Login
-      </a>
-    </p>
-
-</div>
+    <div class="auth-hero">
+      <h2>Stay inspired</h2>
+      <p>Follow new arrivals, unlock member-only perks, and never miss a launch with InstaMart membership.</p>
+    </div>
+  </div>
+</section>
 {% endblock %}

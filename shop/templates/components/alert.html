@@ -1,0 +1,17 @@
+<li class="alert {% if 'success' in message.tags %}alert--success{% elif 'error' in message.tags %}alert--error{% elif 'warning' in message.tags %}alert--warning{% elif 'info' in message.tags %}alert--info{% else %}alert--neutral{% endif %}" role="alert">
+    <span class="alert__icon" aria-hidden="true">
+        {% if 'success' in message.tags %}
+            <i class="fas fa-circle-check"></i>
+        {% elif 'error' in message.tags %}
+            <i class="fas fa-circle-exclamation"></i>
+        {% elif 'warning' in message.tags %}
+            <i class="fas fa-triangle-exclamation"></i>
+        {% else %}
+            <i class="fas fa-circle-info"></i>
+        {% endif %}
+    </span>
+    <span class="alert__text">{{ message }}</span>
+    <button type="button" class="alert__close" data-alert-dismiss aria-label="Dismiss message">
+        <i class="fas fa-xmark"></i>
+    </button>
+</li>

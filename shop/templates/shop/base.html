@@ -1,145 +1,181 @@
 {% load static %}
 <!DOCTYPE html>
-<html class="bg-white text-gray-800">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>{% block title %}My shop{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}InstaMart — Contemporary essentials{% endblock %}</title>
+    <meta name="description" content="Discover beautifully curated essentials, delivered with care by InstaMart." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Satoshi:wght@400;500;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'shop/base.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-bujuHqnZ1tcHTul3e8DqRLVQjaxAg/P6MqxsVXni4eWh05rq6ArlTcidH8333Adxpv8uKXu95syEHCmRZj+ABA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-screen flex flex-col">
-
-    <!-- Header -->
-    <header class="bg-blue-600 text-white shadow-md fixed top-0 left-0 w-full z-50">
-        <div class="container mx-auto flex justify-between items-center p-4">
-
-            <!-- Logo -->
-            <a href="{% url 'shop:product_list' %}" class="text-2xl font-bold hover:text-blue-200">
-                InstaMart
-            </a>
-
-            <!-- Search Form -->
-            <form action="{% url 'shop:product_search' %}" method="get" class="flex items-center bg-white rounded-lg overflow-hidden shadow-md w-1/3">
-                <input type="text" name="q" placeholder="Search products..."
-                       class="px-3 py-2 text-gray-700 w-full focus:outline-none"
-                       value="{{ request.GET.q|default:'' }}">
-                <button type="submit" class="px-4 bg-blue-500 text-white hover:bg-blue-700 transition">
-                    <i class="fas fa-search"></i>
+<body data-telemetry-endpoint="{% url 'shop:telemetry_event' %}">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="site-shell">
+        <header class="site-header">
+            <div class="site-container site-header__bar">
+                <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="mobile-drawer" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </button>
-            </form>
 
-            <!-- Right Side: Cart + User -->
-            <div class="flex items-center space-x-6">
+                <a href="{% url 'shop:product_list' %}" class="brand-mark">
+                    InstaMart
+                </a>
 
-                <!-- Cart -->
-                <div class="cart text-sm">
+                <nav class="primary-nav" aria-label="Primary">
+                    <a href="{% url 'shop:product_list' %}">Shop</a>
+                    <a href="{% url 'shop:product_search' %}?q=new">New Arrivals</a>
+                    <a href="#">Collections</a>
+                    <a href="#">Support</a>
+                </nav>
+
+                <form action="{% url 'shop:product_search' %}" method="get" class="search-bar" role="search">
+                    <input type="text" name="q" placeholder="Search essentials..." value="{{ request.GET.q|default:'' }}" aria-label="Search products" />
+                    <button type="submit" aria-label="Submit search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+
+                <div class="user-actions">
                     {% with total_items=cart|length %}
-                        <a href="{% url 'cart:cart_detail' %}" class="flex items-center space-x-2 hover:underline">
-                            <div class="relative">
-                                <svg xmlns="http://www.w3.org/2000/svg" 
-                                     class="h-6 w-6 text-white" 
-                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" 
-                                          stroke-linejoin="round" 
-                                          stroke-width="2" 
-                                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 7h13L17 13M7 13H3" />
-                                </svg>
-                                {% if total_items > 0 %}
-                                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] rounded-full min-w-[1rem] h-4 px-1 flex items-center justify-center leading-none">
-                                        {{ total_items }}
-                                    </span>
-                                {% endif %}
-                            </div>
-                            <span class="text-white font-medium">Cart</span>
+                        <a href="{% url 'cart:cart_detail' %}" class="cart-chip" aria-label="View cart">
+                            <i class="fas fa-bag-shopping"></i>
+                            <span>Cart</span>
+                            {% if total_items > 0 %}
+                                <span class="cart-chip__count">{{ total_items }}</span>
+                            {% endif %}
                         </a>
                     {% endwith %}
-                </div>
 
-                <!-- User Account -->
-                <div class="flex items-center space-x-4">
                     {% if user.is_authenticated %}
-                        <span class="font-medium">Hi, {{ user.username }}</span>
-                        <!-- ✅ Logout Form (POST with CSRF) -->
-                        <form action="{% url 'accounts:logout' %}" method="post" class="inline">
+                        <span>Hi, {{ user.username }}</span>
+                        <form action="{% url 'accounts:logout' %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="flex items-center space-x-2 hover:text-blue-200 transition">
-                                <i class="fas fa-sign-out-alt"></i>
+                            <button type="submit" class="pill-link">
+                                <i class="fas fa-arrow-right-from-bracket"></i>
                                 <span>Logout</span>
                             </button>
                         </form>
-
                     {% else %}
-                        <a href="{% url 'accounts:login' %}" class="flex items-center space-x-2 hover:text-blue-200">
-                            <i class="fas fa-sign-in-alt"></i>
+                        <a href="{% url 'accounts:login' %}" class="pill-link">
+                            <i class="fas fa-arrow-right-to-bracket"></i>
                             <span>Login</span>
                         </a>
-                        <a href="{% url 'accounts:signup' %}" class="flex items-center space-x-2 hover:text-blue-200">
+                        <a href="{% url 'accounts:signup' %}" class="pill-link">
                             <i class="fas fa-user-plus"></i>
-                            <span>Sign Up</span>
+                            <span>Join</span>
                         </a>
                     {% endif %}
                 </div>
             </div>
+        </header>
+
+        <div class="mobile-drawer" id="mobile-drawer" data-nav-drawer aria-hidden="true">
+            <div class="mobile-drawer__overlay" data-nav-overlay></div>
+            <div class="mobile-drawer__panel" role="dialog" aria-modal="true" aria-label="Primary navigation" tabindex="-1">
+                <div class="mobile-drawer__header">
+                    <span class="brand-mark">InstaMart</span>
+                    <button class="nav-toggle nav-toggle--close" type="button" data-nav-close aria-label="Close menu">
+                        <i class="fas fa-xmark"></i>
+                    </button>
+                </div>
+                <nav class="mobile-drawer__nav" aria-label="Mobile primary">
+                    <a href="{% url 'shop:product_list' %}">Shop</a>
+                    <a href="{% url 'shop:product_search' %}?q=new">New Arrivals</a>
+                    <a href="#">Collections</a>
+                    <a href="#">Support</a>
+                </nav>
+                <div class="mobile-drawer__meta">
+                    {% with total_items=cart|length %}
+                        <a href="{% url 'cart:cart_detail' %}" class="mobile-cart-link">
+                            <span>
+                                <strong>Cart</strong>
+                                <small>{% if total_items > 0 %}{{ total_items }} items{% else %}Empty{% endif %}</small>
+                            </span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    {% endwith %}
+
+                    {% if user.is_authenticated %}
+                        <p class="text-sm text-gray-500">Signed in as <strong>{{ user.username }}</strong></p>
+                        <form action="{% url 'accounts:logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn--ghost w-full">Logout</button>
+                        </form>
+                    {% else %}
+                        <div class="mobile-auth-links">
+                            <a href="{% url 'accounts:login' %}" class="btn btn--primary">Login</a>
+                            <a href="{% url 'accounts:signup' %}" class="btn btn--ghost">Create account</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    </header>
 
-    <!-- Spacer for fixed header -->
-    <div class="h-20"></div>
+        {% if messages %}
+        <section class="site-container" style="margin-top: 1.5rem;" role="status" aria-live="polite">
+            <ul class="stacked-list">
+                {% for message in messages %}
+                    {% include "components/alert.html" with message=message %}
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
 
-    <!-- Messages -->
-    {% if messages %}
-    <div class="container mx-auto mt-4">
-        <ul class="space-y-2">
-            {% for message in messages %}
-            <li class="p-3 rounded text-white {% if message.tags == 'success' %}bg-green-500{% elif message.tags == 'error' %}bg-red-500{% else %}bg-gray-500{% endif %}">
-                {{ message }}
-            </li>
-            {% endfor %}
-        </ul>
+        <main id="main-content" class="page-content" tabindex="-1">
+            <div class="site-container">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="site-container footer__grid">
+                <div>
+                    <p class="footer__heading">InstaMart</p>
+                    <p>Curated goods and elevated experiences for every day.</p>
+                    <p style="margin-top: 0.75rem;">
+                        Riverside Lane · Nairobi<br />
+                        Open Mon–Sat · 9am–7pm EAT
+                    </p>
+                    <p style="margin-top: 0.5rem;">
+                        <a href="mailto:hello@instamart.africa">hello@instamart.africa</a><br />
+                        <a href="tel:+254700555555">+254 700 555 555</a>
+                    </p>
+                </div>
+                <div>
+                    <p class="footer__heading">Company</p>
+                    <a href="{% url 'shop:product_list' %}#our-story">About</a><br />
+                    <a href="mailto:talent@instamart.africa?subject=Careers%20at%20InstaMart">Careers</a><br />
+                    <a href="mailto:press@instamart.africa?subject=Press%20kit%20request">Press</a>
+                </div>
+                <div>
+                    <p class="footer__heading">Support</p>
+                    <a href="mailto:care@instamart.africa?subject=Support%20request">Contact</a><br />
+                    <a href="{% url 'shop:product_list' %}#policies">Shipping &amp; Returns</a><br />
+                    <a href="https://wa.me/254700222444" rel="noopener" target="_blank">WhatsApp concierge</a>
+                </div>
+                <div>
+                    <p class="footer__heading">Stay in touch</p>
+                    <div class="social-links" aria-label="Social media">
+                        <a href="https://facebook.com" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://linkedin.com" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://tiktok.com" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
-    {% endif %}
 
-    <!-- Main content -->
-    <main class="container mx-auto flex-1 p-4">
-        {% block content %}
-        {% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-blue-600 text-white py-6 mt-8">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
-            <div class="mb-4 md:mb-0">
-                <span class="font-semibold text-lg">&copy; {{ now|date:"Y" }} InstaMart</span>  
-                <span class="text-sm block">All rights reserved.</span>
-            </div>
-            <div class="flex space-x-6 mb-4 md:mb-0">
-                <a href="#" class="hover:underline text-sm">About Us</a>
-                <a href="#" class="hover:underline text-sm">Contact</a>
-                <a href="#" class="hover:underline text-sm">Privacy Policy</a>
-                <a href="#" class="hover:underline text-sm">Terms of Service</a>
-            </div>
-            <div class="flex space-x-3">
-                <a href="https://facebook.com" target="_blank" 
-                   class="bg-white text-blue-600 p-2 rounded-full hover:bg-gray-200 transition">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://twitter.com" target="_blank" 
-                   class="bg-white text-blue-600 p-2 rounded-full hover:bg-gray-200 transition">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="https://linkedin.com" target="_blank" 
-                   class="bg-white text-blue-600 p-2 rounded-full hover:bg-gray-200 transition">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a href="https://tiktok.com" target="_blank" 
-                   class="bg-white text-blue-600 p-2 rounded-full hover:bg-gray-200 transition">
-                    <i class="fab fa-tiktok"></i>
-                </a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Font Awesome CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'shop/app.js' %}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {% block extra_body %}{% endblock %}
 </body>
 </html>

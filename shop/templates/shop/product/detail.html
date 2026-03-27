@@ -7,87 +7,82 @@
 {% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 py-8">
-  <div class="bg-white rounded-lg shadow-lg p-6 grid md:grid-cols-2 gap-8">
+<div class="space-y-10">
+  <section class="page-section">
+    <div class="grid gap-8 lg:grid-cols-2">
 
-    <!-- Product Image -->
-    <div class="flex justify-center items-center">
-      <img src="{% if product.image %}{{ product.image.url }}{% else %}
-               {% static 'img/no_image.png' %}{% endif %}"
+       <div class="flex items-center justify-center bg-slate-50 rounded-2xl p-6">
+         {% if product.image %}
+         <img src="{{ product.image.url }}"
            alt="{{ product.name }}"
-           class="rounded-lg shadow-md max-h-96 object-contain">
-    </div>
+           loading="eager"
+           decoding="async"
+           width="{{ product.image.width }}"
+           height="{{ product.image.height }}"
+           class="max-h-96 w-full object-contain drop-shadow-lg">
+         {% else %}
+         <img src="{% static 'img/no_image.png' %}"
+           alt="{{ product.name }}"
+           loading="eager"
+           decoding="async"
+           width="800"
+           height="600"
+           class="max-h-96 w-full object-contain drop-shadow-lg">
+         {% endif %}
+       </div>
 
-    <!-- Product Info -->
-    <div>
-      <h1 class="text-3xl font-bold text-blue-700 mb-2">{{ product.name }}</h1>
-      <h2 class="text-lg text-gray-500 mb-4">
-        <a href="{{ product.category.get_absolute_url }}" class="hover:underline">
-          {{ product.category }}
-        </a>
-      </h2>
-      <p class="text-2xl font-semibold text-blue-600 mb-4">Ksh.{{ product.price }}</p>
-
-      <!-- Add to Cart Form -->
-      <form action="{% url 'cart:cart_add' product.id %}" method="post" class="mb-6">
-        {{ cart_product_form }}
-        {% csrf_token %}
-        <button type="submit" 
-        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200">
-         Add to Cart
-        </button>
-      </form>
-
-      <!-- Description -->
-      <h3 class="text-xl font-semibold text-gray-800 mb-3">Product Details</h3>
-      <div class="text-gray-700 leading-relaxed">
-        {{ product.description|linebreaks }}
-      </div>
-    </div>
-  </div>
-
-  <!-- Related Products -->
-  {% if related_products %}
-  <div class="mt-12">
-    <h3 class="text-xl font-semibold text-gray-800 mb-4">You may also like</h3>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-      {% for p in related_products %}
-        <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-          <a href="{{ p.get_absolute_url }}">
-            <img src="{% if p.image %}{{ p.image.url }}{% else %}
-                     {% static 'img/no_image.png' %}{% endif %}"
-                 alt="{{ p.name }}"
-                 class="rounded-lg mb-3 h-40 w-full object-cover">
-          </a>
-          <p class="text-sm text-gray-700">
-            <a href="{{ p.get_absolute_url }}" class="hover:text-blue-600">{{ p.name }}</a>
-          </p>
+      <div class="space-y-5">
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-gray-400">{{ product.category }}</p>
+          <h1 class="text-4xl font-semibold mt-2">{{ product.name }}</h1>
+          <a href="{{ product.category.get_absolute_url }}" class="text-sm text-blue-600 hover:underline">View more from this category</a>
         </div>
+
+        <p class="text-3xl font-semibold text-blue-700">Ksh.{{ product.price }}</p>
+
+        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="space-y-3">
+          {{ cart_product_form }}
+          {% csrf_token %}
+          <button type="submit" class="btn btn--primary w-full md:w-auto">Add to cart</button>
+        </form>
+
+        <div class="border-t border-gray-200 pt-4">
+          <h3 class="text-lg font-semibold mb-2">Product Details</h3>
+          <div class="text-gray-600 leading-relaxed">
+            {{ product.description|linebreaks }}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  {% if related_products %}
+  <section class="page-section">
+    <div class="flex flex-col gap-1 mb-5">
+      <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Curated picks</p>
+      <h3 class="text-2xl font-semibold">You may also like</h3>
+    </div>
+    <div class="card-grid">
+      {% for p in related_products %}
+        {% include "components/product_card.html" with product=p badge="Recommended" show_category=False %}
       {% endfor %}
     </div>
-  </div>
+  </section>
   {% endif %}
 
-  <!-- Frequently Bought Together -->
   {% if frequently_bought %}
-  <div class="mt-12">
-    <h3 class="text-xl font-semibold text-gray-800 mb-4">Frequently Bought Together</h3>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+  <section class="page-section">
+    <div class="flex flex-col gap-1 mb-5">
+      <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Smart bundles</p>
+      <h3 class="text-2xl font-semibold">Frequently bought together</h3>
+    </div>
+    <div class="card-grid">
       {% for p in frequently_bought %}
-        <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-          <a href="{{ p.get_absolute_url }}">
-            <img src="{% if p.image %}{{ p.image.url }}{% else %}
-                     {% static 'img/no_image.png' %}{% endif %}"
-                 alt="{{ p.name }}"
-                 class="rounded-lg mb-3 h-40 w-full object-cover">
-          </a>
-          <p class="text-sm text-gray-700">
-            <a href="{{ p.get_absolute_url }}" class="hover:text-blue-600">{{ p.name }}</a>
-          </p>
-        </div>
+        {% include "components/product_card.html" with product=p badge="Bundle" show_category=False %}
       {% endfor %}
     </div>
-  </div>
+  </section>
   {% endif %}
 </div>
 

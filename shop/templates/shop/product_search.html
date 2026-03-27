@@ -2,29 +2,20 @@
 {% load static %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-4">Search Results for "{{ query }}"</h1>
+<section class="page-section space-y-6">
+    <header>
+        <p class="text-xs uppercase tracking-[0.3em] text-gray-500">Search</p>
+        <h1 class="text-3xl font-semibold">Results for "{{ query }}"</h1>
+    </header>
 
     {% if results %}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="card-grid">
             {% for product in results %}
-                <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
-                    <a href="{{ product.get_absolute_url }}">
-                        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
-                             alt="{{ product.name }}"
-                             class="rounded-lg mb-3 h-40 w-full object-cover">
-                    </a>
-                    <p class="text-sm text-gray-700">
-                        <a href="{{ product.get_absolute_url }}" class="hover:text-blue-600">
-                            {{ product.name }}
-                        </a>
-                    </p>
-                    <p class="text-blue-600 font-bold">Ksh.{{ product.price }}</p>
-                </div>
+                {% include "components/product_card.html" with product=product %}
             {% endfor %}
         </div>
     {% else %}
-        <p>No products found.</p>
+        <p class="text-gray-500">No products found.</p>
     {% endif %}
-</div>
+</section>
 {% endblock %}

@@ -7,54 +7,285 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col md:flex-row gap-6">
-  
-  <!-- Sidebar -->
-  <aside class="w-full md:w-1/4 bg-white shadow rounded-xl p-4">
-    <h3 class="text-lg font-semibold text-blue-700 border-b pb-2 mb-4">Categories</h3>
-    <ul class="space-y-2">
-      <li {% if not category %}class="font-semibold text-blue-600"{% endif %}>
-        <a href="{% url 'shop:product_list' %}" class="hover:text-blue-500 transition">
-          All
-        </a>
-      </li>
-      {% for c in categories %}
-      <li {% if category.slug == c.slug %}class="font-semibold text-blue-600"{% endif %}>
-        <a href="{{ c.get_absolute_url }}" class="hover:text-blue-500 transition">
-          {{ c.name }}
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </aside>
-
-  <!-- Main Products -->
-  <main class="w-full md:w-3/4">
-    <h1 class="text-2xl font-bold text-blue-800 mb-6">
-      {% if category %}{{ category.name }}{% else %}Products{% endif %}
-    </h1>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {% if products %}
-        {% for product in products %}
-        <div class="bg-white shadow rounded-xl overflow-hidden hover:shadow-lg transition">
-          <a href="{{ product.get_absolute_url }}">
-            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" 
-                 alt="{{ product.name }}" 
-                 class="w-full h-48 object-cover">
-          </a>
-          <div class="p-4">
-            <a href="{{ product.get_absolute_url }}" class="block text-lg font-semibold text-blue-700 hover:underline">
-              {{ product.name }}
-            </a>
-            <p class="text-gray-700 font-medium mt-2">Ksh.{{ product.price }}</p>
+<div class="space-y-10">
+  {% if not category %}
+    {% if hero_slides %}
+    <section class="hero-slider"
+             data-hero-slider
+             data-hero-interval="{{ hero_slider_interval }}"
+             data-hero-autoplay="{{ hero_slider_autoplay|yesno:'true,false' }}"
+             data-hero-pause-interaction="{{ hero_slider_pause_on_interaction|yesno:'true,false' }}"
+             tabindex="0"
+             aria-roledescription="carousel"
+             aria-label="Featured stories slider"
+             aria-live="polite">
+      <div class="hero-slider__track" data-hero-track>
+        {% for slide in hero_slides %}
+        <article class="hero hero-slide {% if forloop.first %}is-active{% endif %}"
+                 data-hero-slide
+                 aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+                 style="--hero-bg: url('{{ slide.image|default:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80" }}'); --hero-accent: {{ slide.accent|default:'#2563eb' }};">
+          <p class="hero__eyebrow">{{ slide.eyebrow }}</p>
+          {% if slide.tagline %}
+          <p class="hero__tagline">{{ slide.tagline }}</p>
+          {% endif %}
+          <h1 class="hero__title">{{ slide.title }}</h1>
+          <p class="hero__description">{{ slide.description }}</p>
+          <div class="hero__actions">
+            {% if slide.primary_cta %}
+            <a href="{{ slide.primary_cta.href }}" class="btn btn--primary">{{ slide.primary_cta.label }}</a>
+            {% endif %}
+            {% if slide.secondary_cta %}
+            <a href="{{ slide.secondary_cta.href }}" class="btn btn--ghost">{{ slide.secondary_cta.label }}</a>
+            {% endif %}
           </div>
-        </div>
+          <div class="hero__stats">
+            <div class="stat-card">
+              <span class="stat-card__value">48h</span>
+              <p class="stat-card__label">Dispatch window</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card__value">500+</span>
+              <p class="stat-card__label">Curated pieces</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card__value">4.9/5</span>
+              <p class="stat-card__label">Customer rating</p>
+            </div>
+          </div>
+        </article>
         {% endfor %}
-      {% else %}
-        <p class="text-gray-600 italic col-span-full">No products found in this category.</p>
+      </div>
+      <div class="hero-slider__dots" data-hero-dots>
+        {% for slide in hero_slides %}
+        <button type="button" class="hero-slider__dot {% if forloop.first %}is-active{% endif %}" aria-label="Go to slide {{ forloop.counter }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}" data-hero-dot></button>
+        {% endfor %}
+      </div>
+      <div class="hero-slider__controls" role="group" aria-label="Slider controls">
+        <button type="button" class="hero-slider__arrow" data-hero-prev aria-label="Previous slide">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <button type="button" class="hero-slider__toggle" data-hero-toggle aria-pressed="false">
+          <span data-hero-toggle-text>Pause autoplay</span>
+        </button>
+        <button type="button" class="hero-slider__arrow" data-hero-next aria-label="Next slide">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+      <div class="hero-slider__progress" aria-hidden="true">
+        <span data-hero-progress></span>
+      </div>
+      <p class="sr-only" aria-live="polite" data-hero-status></p>
+    </section>
+    {% endif %}
+    {% if not hero_slides %}
+    <section class="hero">
+      <p class="hero__eyebrow">New Season · Capsule 2026</p>
+      <h1 class="hero__title">Everyday essentials, elevated.</h1>
+      <p class="hero__description">Discover tactile finishes, grounded palettes, and thoughtful craftsmanship. Curated drops land weekly so your space and style stay fresh.</p>
+      <div class="hero__actions">
+        <a href="{% url 'shop:product_search' %}?q=new" class="btn btn--primary">Shop new arrivals</a>
+        <a href="{% url 'cart:cart_detail' %}" class="btn btn--ghost">View cart</a>
+      </div>
+      <div class="hero__stats">
+        <div class="stat-card">
+          <span class="stat-card__value">48h</span>
+          <p class="stat-card__label">Dispatch window</p>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value">500+</span>
+          <p class="stat-card__label">Curated pieces</p>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__value">4.9/5</span>
+          <p class="stat-card__label">Customer rating</p>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if category_highlights %}
+    <section class="page-section space-y-6">
+      <div class="section-header">
+        <div>
+          <p class="section-header__eyebrow">Categories</p>
+          <h2>Shop by vibe</h2>
+        </div>
+        <a href="{% url 'shop:product_list' %}" class="pill-link">View all</a>
+      </div>
+      <div class="category-grid">
+        {% for highlight in category_highlights %}
+          <a href="{{ highlight.get_absolute_url }}" class="category-card">
+            <div>
+              <p class="category-card__name">{{ highlight.name }}</p>
+              <p class="category-card__meta">{{ highlight.product_total }} styles</p>
+            </div>
+            <i class="fas fa-arrow-up-right-from-square"></i>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if featured_products %}
+    <section class="page-section space-y-6">
+      <div class="section-header">
+        <div>
+          <p class="section-header__eyebrow">Featured drop</p>
+          <h2>Editor’s picks</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        {% for product in featured_products %}
+          {% include "components/product_card.html" with product=product badge="Featured" priority=forloop.first|yesno:"high,auto" loading=forloop.first|yesno:"eager,lazy" %}
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if bestsellers %}
+    <section class="page-section space-y-6">
+      <div class="section-header">
+        <div>
+          <p class="section-header__eyebrow">Community favorites</p>
+          <h2>Bestsellers</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        {% for product in bestsellers %}
+          {% include "components/product_card.html" with product=product badge="Top rated" priority=forloop.first|yesno:"high,auto" loading=forloop.first|yesno:"eager,lazy" %}
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if new_arrivals %}
+    <section class="page-section space-y-6">
+      <div class="section-header">
+        <div>
+          <p class="section-header__eyebrow">Just landed</p>
+          <h2>New arrivals</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        {% for product in new_arrivals %}
+          {% include "components/product_card.html" with product=product badge="New" priority=forloop.first|yesno:"high,auto" loading=forloop.first|yesno:"eager,lazy" %}
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <section class="page-section story-panel">
+      <div>
+        <p class="section-header__eyebrow">InstaMart edit</p>
+        <h2>Crafted for slow living</h2>
+        <p class="text-gray-600 mt-3">From small-batch ceramics to organic textiles, our curation team sources pieces that bring calm to your daily rituals. Take a peek behind the scenes and see how every collection is styled.</p>
+        <div class="hero__actions" style="margin-top: 1.25rem;">
+          <a href="{% url 'shop:product_search' %}?q=ceramic" class="btn btn--primary">Explore the edit</a>
+          <a href="#" class="pill-link">Read the journal</a>
+        </div>
+      </div>
+      <div class="story-panel__media">
+        <img src="https://images.unsplash.com/photo-1521579971123-1192931a1452?auto=format&fit=crop&w=900&q=80"
+             alt="Lifestyle imagery"
+             loading="lazy"
+             decoding="async"
+             fetchpriority="low"
+             width="900"
+             height="600"
+             sizes="(min-width: 1024px) 50vw, 90vw">
+      </div>
+    </section>
+
+    <section class="page-section space-y-6">
+      <div class="section-header">
+        <div>
+          <p class="section-header__eyebrow">Loved by you</p>
+          <h2>What our customers say</h2>
+        </div>
+      </div>
+      <div class="testimonials-grid">
+        <article class="testimonial-card">
+          <p class="testimonial-card__quote">“Beautifully packaged and even better in person. InstaMart nails the modern, minimal aesthetic.”</p>
+          <p class="text-sm text-gray-500 mt-3">— Amina, Nairobi</p>
+        </article>
+        <article class="testimonial-card">
+          <p class="testimonial-card__quote">“Fast shipping and the quality is unmatched. My go-to for thoughtful gifting.”</p>
+          <p class="text-sm text-gray-500 mt-3">— Daniel, Kisumu</p>
+        </article>
+        <article class="testimonial-card">
+          <p class="testimonial-card__quote">“The curated stories help me style my space without second guessing. Love the attention to detail.”</p>
+          <p class="text-sm text-gray-500 mt-3">— Wanjiru, Mombasa</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="newsletter">
+      <div>
+        <p class="section-header__eyebrow" style="color: rgba(255,255,255,0.7);">Stay in the loop</p>
+        <h2 class="text-3xl font-semibold">Get early access to drops &amp; invites</h2>
+        <p class="mt-2" style="color: rgba(255,255,255,0.8);">Join 15k+ design lovers and receive curated playlists, styling tips, and private sale invites.</p>
+      </div>
+      <form action="" method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="newsletter">
+        {{ newsletter_form.email }}
+        <button type="submit" class="btn btn--primary">Subscribe</button>
+      </form>
+      {% if newsletter_form.errors and newsletter_form.errors.email %}
+      <p class="text-sm mt-3" style="color: #fecaca;" role="status">{{ newsletter_form.errors.email.0|default:"Please enter a valid email." }}</p>
       {% endif %}
-    </div>
-  </main>
+    </section>
+  {% endif %}
+
+  <div class="grid gap-6 lg:grid-cols-[260px,1fr]">
+    <aside class="page-section" aria-label="Categories">
+      <p class="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3">Browse</p>
+      <h3 class="text-xl font-semibold mb-4">Categories</h3>
+      <ul class="space-y-2 text-sm">
+        <li>
+          <a href="{% url 'shop:product_list' %}" class="flex items-center justify-between {% if not category %}text-blue-600 font-semibold{% else %}text-gray-600{% endif %}">
+            <span>All</span>
+            <i class="fas fa-arrow-up-right-from-square text-xs opacity-60"></i>
+          </a>
+        </li>
+        {% for c in categories %}
+        <li>
+          <a href="{{ c.get_absolute_url }}" class="flex items-center justify-between {% if category and category.slug == c.slug %}text-blue-600 font-semibold{% else %}text-gray-600{% endif %}">
+            <span>{{ c.name }}</span>
+            <i class="fas fa-arrow-up-right-from-square text-xs opacity-60"></i>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <section class="page-section space-y-6">
+      <header class="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-[0.25em] text-gray-500">Curated for you</p>
+          <h1 class="text-3xl font-semibold">
+            {% if category %}{{ category.name }}{% else %}All Products{% endif %}
+          </h1>
+        </div>
+        <p class="text-sm text-gray-500">{{ products|length }} items</p>
+      </header>
+
+      {% if products %}
+        <div class="card-grid">
+          {% for product in products %}
+            {% include "components/product_card.html" with product=product sizes="(min-width: 1280px) 260px, (min-width: 768px) 40vw, 100vw" %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-gray-500">No products found in this category.</p>
+        <div class="card-grid" aria-hidden="true" style="margin-top: 1rem;">
+          <div class="card-skeleton"></div>
+          <div class="card-skeleton"></div>
+          <div class="card-skeleton"></div>
+        </div>
+      {% endif %}
+    </section>
+  </div>
 </div>
 {% endblock %}

@@ -1,0 +1,41 @@
+{% load static %}
+<div class="card product-card">
+        <a href="{{ product.get_absolute_url }}" class="product-card__media" data-ripple>
+           {% if product.image %}
+           <img src="{{ product.image.url }}"
+               alt="{{ product.name }}"
+               loading="{{ loading|default:'lazy' }}"
+               decoding="async"
+               fetchpriority="{{ priority|default:'auto' }}"
+               width="{{ product.image.width }}"
+               height="{{ product.image.height }}"
+               sizes="{{ sizes|default:'(min-width: 1280px) 280px, (min-width: 768px) 45vw, 90vw' }}">
+           {% else %}
+           <img src="{% static 'img/no_image.png' %}"
+               alt="{{ product.name }}"
+               loading="{{ loading|default:'lazy' }}"
+               decoding="async"
+               fetchpriority="{{ priority|default:'auto' }}"
+               width="800"
+               height="600"
+               sizes="{{ sizes|default:'(min-width: 1280px) 280px, (min-width: 768px) 45vw, 90vw' }}">
+           {% endif %}
+        </a>
+    <div class="card__body">
+        {% if badge %}
+            <span class="badge badge--accent">{{ badge }}</span>
+        {% endif %}
+        <a href="{{ product.get_absolute_url }}" class="product-card__title">
+            {{ product.name }}
+        </a>
+        {% if show_category|default:True and product.category %}
+        <p class="product-card__category">{{ product.category }}</p>
+        {% endif %}
+        <div class="product-card__bottom">
+            <p class="product-card__price">Ksh.{{ product.price }}</p>
+            {% with label=cta_label|default:"View" %}
+            <a href="{{ product.get_absolute_url }}" class="btn btn--ghost">{{ label }}</a>
+            {% endwith %}
+        </div>
+    </div>
+</div>

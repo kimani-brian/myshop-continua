@@ -48,9 +48,12 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('shop:product_detail', args=[self.id, self.slug])
 
-    
+class NewsletterSubscriber(models.Model):
+    email = models.EmailField(unique=True)
+    created = models.DateTimeField(auto_now_add=True)
 
-    
-    
+    class Meta:
+        ordering = ['-created']
 
-# Create your models here.
+    def __str__(self):
+        return self.email

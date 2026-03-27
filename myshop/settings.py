@@ -75,12 +75,15 @@ WSGI_APPLICATION = 'myshop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE':'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-DATABASES["default"]=dj_database_url.parse(config('DATABASE_URL'))
+database_url = config('DATABASE_URL', default=None)
+use_remote_db = config('USE_REMOTE_DB', default=False, cast=bool)
+if database_url and use_remote_db:
+    DATABASES['default'] = dj_database_url.parse(database_url)
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
